@@ -68,6 +68,9 @@ export default function App() {
 
   useEffect(() => {
     dispatch(listenAuth());
+  }, [dispatch]);
+  
+  useEffect(() => {
     if (!user) return;
     const unsubTasks = dispatch(listenTasks(user.uid));
     const unsubCategories = dispatch(listenCategories(user.uid));
@@ -176,7 +179,7 @@ export default function App() {
                       <div className="flex gap-2 mb-2">
                         <ImportExport
                           tasks={tasks}
-                          setTasks={(t) => dispatch(setTasks(val))}
+                          setTasks={(t) => dispatch(setTasks(t))}
                         />
                       </div>
 
