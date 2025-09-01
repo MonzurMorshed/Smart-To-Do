@@ -30,7 +30,15 @@ const resources = {
       "tips_title": "Tips",
       "tip_1": "Use priority tags to highlight important tasks.",
       "tip_2": "Tasks are saved to localStorage automatically.",
-      "tip_3": "Drag items to reorder (manual mode)."
+      "tip_3": "Drag items to reorder (manual mode).",
+      "thinking": "Thinking",
+      "no_tasks_yet_add_one": "No tasks yet — add one !",
+      "new_category": "New Category",
+      "sort_by_due_date": "Sort by due date",
+      "sort_by_priority": "Sort By priority",
+      "thinking_of_a_task": "Thinking of a task",
+      "uses_as_notes": "Uses as notes",
+      "dismiss": "Dismiss"
     }
   },
   es: {
@@ -41,7 +49,6 @@ const resources = {
       "add": "Agregar",
       "add_task": "Agregar una tarea",
       "task_title": "Título de la tarea",
-      "ai_suggest": "Sugerencia AI",
       "notes": "Notas (opcional)",
       "category": "Categoría",
       "select_category": "Seleccionar categoría",
@@ -60,12 +67,21 @@ const resources = {
       "tips_title": "Consejos",
       "tip_1": "Usa etiquetas de prioridad para resaltar tareas importantes.",
       "tip_2": "Las tareas se guardan automáticamente en localStorage.",
-      "tip_3": "Arrastra elementos para reordenar (modo manual)."
+      "tip_3": "Arrastra elementos para reordenar (modo manual).",
+      "ai_suggest": "Sugerencia de IA",
+      "thinking": "Pensamiento",
+      "no_tasks_yet_add_one": "Aún no hay tareas: ¡añade una !",
+      "new_category": "Nueva categoría",
+      "sort_by_due_date": "Trier par date d'échéance",
+      "sort_by_priority": "Ordenar por fecha de vencimiento",
+      "thinking_of_a_task": "Pensando en una tarea",
+      "uses_as_notes": "Usos como notas",
+      "dismiss": "Despedir"
     }
   },
   fr: {
     translation: {
-      "app_title": "Smart To-Do List",
+      "app_title": "Liste de tâches intelligentes",
       "app_subtitle": "Planifiez, suivez et accomplissez plus avec une gestion intelligente des tâches. Transformez les idées en action—rapidement et efficacement.",
       "new_category": "Nouvelle catégorie...",
       "add": "Ajouter",
@@ -90,7 +106,15 @@ const resources = {
       "tips_title": "Conseils",
       "tip_1": "Utilisez des étiquettes de priorité pour mettre en évidence les tâches importantes.",
       "tip_2": "Les tâches sont automatiquement sauvegardées dans localStorage.",
-      "tip_3": "Faites glisser les éléments pour réorganiser (mode manuel)."
+      "tip_3": "Faites glisser les éléments pour réorganiser (mode manuel).",
+      "thinking": "Pensée",
+      "no_tasks_yet_add_one": "Aucune tâche pour le moment — ajoutez-en une !",
+      "new_category": "Nouvelle catégorie",
+      "sort_by_due_date": "Trier par date d'échéance",
+      "sort_by_priority": "Trier par priorité",
+      "thinking_of_a_task": "Penser à une tâche",
+      "uses_as_notes": "Utilisations comme notes",
+      "dismiss": "Rejeter"
     }
   }
 };

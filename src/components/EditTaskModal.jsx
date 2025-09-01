@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import { GiCancel } from "react-icons/gi";
 import { FaRegEdit } from "react-icons/fa";
+import toast from 'react-hot-toast';
 
 export default function EditTaskModal({ task, categories, onClose, onSave }) {
   const [title, setTitle] = useState('');
@@ -21,7 +22,10 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!title.trim()) return alert('Title required');
+    if (!title.trim()) {
+      toast.error('Please enter title');
+      return false;
+    }
     onSave({
       ...task,
       title: title.trim(),
@@ -31,6 +35,7 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
       due: due ? new Date(due).getTime() : null,
     });
     onClose();
+    toast.success('Task edited successfully.');
   };
 
   if (!task) return null;
@@ -59,7 +64,7 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
             onChange={e => setCategory(e.target.value)}
           >
             {categories.map(c => (
-              <option key={c}>{c}</option>
+              <option key={c.id}>{c.name}</option>
             ))}
           </select>
           <select

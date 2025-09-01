@@ -1,7 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { subscribeCategories, addCategory as addCategoryFirebase } from "../../firebase/firestoreService";
 
-const initialState = { categories: [] };
+const cachedCategories = (() => {
+  try {
+    const raw = localStorage.getItem("smart-todo.categories");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+})();
+
+const initialState = { categories: cachedCategories };
 
 const categoriesSlice = createSlice({
   name: "categories",
@@ -19,7 +28,9 @@ export const listenCategories = (uid) => dispatch => {
       ...c,
       createdAt: c.createdAt instanceof Date ? c.createdAt.getTime() : c.createdAt
     }));
-    dispatch(setCategories(safeCats))
+    dispatch(setCategories(safeCats));
+    localStorage.setItem("smart-todo.categories", JSON.stringify(safeCats));
+
   });
 };
 

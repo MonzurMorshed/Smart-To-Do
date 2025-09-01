@@ -14,7 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = initializeFirestore(app, {
   cache: {
-    type: "persistent", // or "memory" if you don't want IndexedDB
+    type: "persistent"
   }
 });
 export const auth = getAuth(app);

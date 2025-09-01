@@ -1,8 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { subscribeTasks, addTask as addTaskFirebase, updateTask as updateTaskFirebase, deleteTask as deleteTaskFirebase } from "../../firebase/firestoreService";
 
+const cachedTasks = (() => {
+  try {
+    const raw = localStorage.getItem("smart-todo.tasks");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+})();
+
 const initialState = {
-    tasks: []
+    tasks: cachedTasks
 };
 
 const tasksSlice = createSlice({
@@ -28,6 +37,7 @@ export const { setTasks, reorderTasks } = tasksSlice.actions;
 export const listenTasks = (uid) => dispatch => {
     return subscribeTasks(uid, tasks => {
       dispatch(setTasks(tasks));
+      localStorage.setItem("smart-todo.tasks", JSON.stringify(tasks));
     });
 };
 

@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { useDispatch } from "react-redux";
 
@@ -18,7 +18,7 @@ export const subscribeTasks = (uid, callback) => {
                 priority: data.priority,
                 due: data.due,
                 completed: data.completed,
-                createdAt: data.createdAt?.toDate().getTime()
+                createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : data.createdAt || null,
             };
         });
         callback(tasks);
@@ -33,7 +33,7 @@ export const addTask = (uid, task) => {
         priority: task.priority,
         due: task.due,
         completed: false,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
     });
 }
 export const updateTask = (payload) => {
@@ -61,7 +61,7 @@ export const subscribeCategories = (uid, callback) => {
 export const addCategory = async (uid, category) => {
     const docRef = await addDoc(categoriesCol(uid),  {
         name: category,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
     });
 }
 export const updateCategory = (uid, id, updates) => updateDoc(doc(db, `users/${uid}/categories/${id}`), updates);

@@ -79,12 +79,12 @@ export default function ImportExport({ tasks, setTasks }) {
 
   return (
     <div className="flex items-center gap-2">
-      {/* EXPORT BUTTON */}
+      
       <select
         onChange={(e) => {
           if (e.target.value) {
             exportFile(e.target.value);
-            e.target.value = ""; // reset
+            e.target.value = ""; 
           }
         }}
         className="border rounded p-1 text-sm bg-white dark:bg-gray-800 dark:text-white"
@@ -95,7 +95,6 @@ export default function ImportExport({ tasks, setTasks }) {
         <option value="json">JSON (.json)</option>
       </select>
 
-      {/* IMPORT BUTTON */}
       <button
         className="border rounded px-3 py-1 text-sm bg-blue-500 text-white hover:bg-blue-600"
         onClick={() => fileInputRef.current.click()}

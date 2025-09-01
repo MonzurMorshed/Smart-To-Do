@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { auth } from "../../firebase/firebase";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 
 const initialState = {
@@ -34,7 +34,6 @@ export const { setUser, logoutUser, setLoading } = authSlice.actions;
 export const listenAuth = () => dispatch => {
     onAuthStateChanged(auth, user => {
         if (user) {
-            // Extract only plain JSON-safe data
             const safeUser = {
                 uid: user.uid,
                 email: user.email,
@@ -43,9 +42,6 @@ export const listenAuth = () => dispatch => {
             };
             dispatch(setUser(safeUser));
         }
-        // else {
-        //   dispatch(setUser(null));
-        // }
         else dispatch(logoutUser());
     });
 };
@@ -61,6 +57,15 @@ export const register = (email, password) => async dispatch => {
 export const logout = () => async dispatch => {
     await signOut(auth);
     dispatch(logoutUser());
+};
+
+export const resetPassword = async (email) => {
+  return await sendPasswordResetEmail(auth, email);
+};
+
+const googleProvider = new GoogleAuthProvider();
+export const googleLogin = async () => {
+  return await signInWithPopup(auth, googleProvider);
 };
 
 export default authSlice.reducer;

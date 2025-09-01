@@ -27,14 +27,8 @@ export default function App() {
   const { categories } = useSelector((state) => state.categories || ['All']);
   const [query, setQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
-  const [theme, setTheme] = useState(() => localStorage.getItem('smart-todo.theme') || 'light');
   const [sortBy, setSortBy] = useState('manual');
   const [editTask, setEditTask] = useState(null);
-
-  useEffect(() => {
-    localStorage.setItem('smart-todo.theme', theme);
-    document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
-  }, [theme]);
 
   const filtered = useMemo(() => {
     let res = tasks.slice();
@@ -67,9 +61,13 @@ export default function App() {
   };
 
   useEffect(() => {
-    dispatch(listenAuth());
+    const unsubAuth = dispatch(listenAuth());
+
+    return () => {
+      unsubAuth && unsubAuth();
+    }
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (!user) return;
     const unsubTasks = dispatch(listenTasks(user.uid));
@@ -80,15 +78,15 @@ export default function App() {
     };
   }, [dispatch, user]);
 
-  const handleDeleteTask = (user_id,task_id) => {
-    dispatch(deleteTask(user_id,task_id));
+  const handleDeleteTask = (user_id, task_id) => {
+    dispatch(deleteTask(user_id, task_id));
     toast.success("Task delete from list successfully.");
   }
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Smart To-Do List...</p>
+        <img src='./public/logo.png' className='w-[250px]' />
       </div>
     );
   }
@@ -98,43 +96,18 @@ export default function App() {
       <Toaster position="top-right" reverseOrder={false} />
 
       <div className="min-h-screen p-4 transition-colors duration-300">
-        <div className="relative">
-          <button
-            onClick={() => setTheme((th) => (th === 'dark' ? 'light' : 'dark'))}
-            className="px-3 py-2 absolute right-0"
-          >
-            {theme === 'dark' ? <CiLight /> : <MdDarkMode />}
-          </button>
-          <select onChange={(e) => i18n.changeLanguage(e.target.value)} defaultValue={i18n.language} className="border p-1 rounded">
-            <option value="en">En</option>
-            <option value="es">Es</option>
-            <option value="fr">Fr</option>
-          </select>
-        </div>
 
         {user ? (
           <div className="max-w-5xl mx-auto">
-            
+
             <Header user={user} />
 
             <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <section className="md:col-span-1 space-y-4">
 
-                {/* will popup form */}
-                <CategoryForm user={user}/> 
-                {/* emd */}
+                <CategoryForm user={user} />
 
                 {categories && <TaskForm categories={categories} onAdd={(task) => dispatch(addTask(user.uid, task))} />}
-
-                <div className="glossy">
-                  <label className="block mb-2 font-medium">{t('search')}</label>
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={t('search')}
-                    className="w-full input"
-                  />
-                </div>
 
                 <div className="glossy text-sm">
                   <strong>{t('tips_title')}</strong>
@@ -147,7 +120,7 @@ export default function App() {
               </section>
 
               <section className="md:col-span-2">
-                <div className="flex items-center gap-2 mb-2 w-1/2 ">
+                <div className="glossy flex items-center gap-2 mb-2 w-full">
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
@@ -164,15 +137,22 @@ export default function App() {
                     className="input"
                   >
                     <option value="manual">{t('manual_order')}</option>
-                    <option value="due">Sort by due date</option>
-                    <option value="priority">Sort by priority</option>
+                    <option value="due">{t('sort_by_due_date')}</option>
+                    <option value="priority">{t('sort_by_priority')}</option>
                   </select>
+
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={t('search')}
+                    className="w-full input"
+                  />
                 </div>
 
                 <div className="glossy">
                   {filtered.length === 0 ? (
                     <p className="text-center py-10 text-muted">
-                      No tasks yet — add one!
+                      {t('no_tasks_yet_add_one')}
                     </p>
                   ) : (
                     <>
@@ -193,7 +173,7 @@ export default function App() {
                             }
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => onDrop(e, idx)}
-                            className={`p-3 rounded-lg border flex items-start justify-between gap-3`}
+                            className={`p-3 rounded-lg border md:flex md:items-start md:justify-between gap-3 xs:w-full md:pb-4`}
                           >
                             <div>
                               <div className="flex items-center gap-3">
@@ -213,9 +193,8 @@ export default function App() {
                                 />
                                 <div>
                                   <div
-                                    className={`font-medium ${
-                                      val.completed ? 'line-through opacity-60' : ''
-                                    }`}
+                                    className={`font-medium ${val.completed ? 'line-through opacity-60' : ''
+                                      }`}
                                   >
                                     {val.title}
                                   </div>
@@ -223,7 +202,7 @@ export default function App() {
                                     {val.category} • {val.priority}{' '}
                                     {val.due
                                       ? '• due ' +
-                                        new Date(val.due).toLocaleDateString()
+                                      new Date(val.due).toLocaleDateString()
                                       : ''}
                                   </div>
                                 </div>
@@ -235,7 +214,7 @@ export default function App() {
                               )}
                             </div>
 
-                            <div className="flex flex-col items-end gap-2">
+                            <div className="flex flex-col md:items-end gap-2 mt-2">
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => setEditTask(val)}
@@ -245,7 +224,7 @@ export default function App() {
                                   {t('edit')}
                                 </button>
                                 <button
-                                  onClick={()=>handleDeleteTask(user.uid,val.id)}
+                                  onClick={() => handleDeleteTask(user.uid, val.id)}
                                   className={`deleteBtn flex items-center space-x-4`}
                                 >
                                   <MdDelete className="mr-2" />
@@ -270,7 +249,7 @@ export default function App() {
               categories={categories}
               onClose={() => setEditTask(null)}
               onSave={(updatedTask) =>
-                dispatch(updateTask({ id: updatedTask.id, updates: updatedTask }))
+                dispatch(updateTask({ uid: user.uid, id: updatedTask.id, updates: updatedTask }))
               }
             />
           </div>

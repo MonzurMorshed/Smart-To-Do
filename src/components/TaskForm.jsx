@@ -29,7 +29,7 @@ async function suggestTaskTitle(task) {
       return tasksArray;
 
     } catch (error) {
-      console.error("Error parsing Gemini response:", error);
+      console.error("Error parsing response:", error);
       return []; 
     }
   } catch (error) {
@@ -79,32 +79,30 @@ export default function TaskForm({ categories, onAdd }) {
       setLoadingAI(false);
     }
   };
-  // end
 
   return (
     <form onSubmit={submit} className="glossy">
 
       <label className="block font-medium mb-2">{t('add_task')}</label>
 
-      <div className="flex gap-2 mb-3">
-        <input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('task_title')} className={`flex-1 input px-3 py-2 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition bg-white/70 dark:bg-gray-800/50 input`} />
+      <div className="block gap-2 mb-3">
+        <input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('task_title')} className={`my-4 flex-1 input px-3 py-2 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition bg-white/70 dark:bg-gray-800/50 input`} />
         <button
           type="button"
           onClick={handleAISuggest}
           disabled={loadingAI}
-          className="px-4 py-2 flex items-center rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow hover:opacity-90 transition"
+          className="w-full px-4 py-2 flex items-center justify-center rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow hover:opacity-90 transition"
         >
-          <FaBrain className="mr-2" /> {loadingAI ? "Thinking..." : "AI Suggest"}
+          <FaBrain className="mr-2" /> {loadingAI ? t('thinking') : t('ai_suggest')}
         </button>
       </div>
 
-      {/* AI Suggestion Preview */}
       {showPreview && (
         <div className="mt-2 p-3 rounded-xl border border-indigo-200 
                   bg-white/80 dark:bg-gray-900/70 shadow-md">
           {loadingAI ? (
             <p className="text-sm text-gray-500 animate-pulse">
-              ✨ Thinking of a task...
+              ✨ {t('thinking_of_a_task')} ...
             </p>
           ) : (
             <>
