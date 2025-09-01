@@ -23,11 +23,19 @@ export default function AuthForm() {
         if(forgotPassword == 0) {
             try {
                 if (mode === "login") {
-                    dispatch(login(email, password));
-                    toast.success("You're successfully login !");
+                    try {
+                        dispatch(login(email, password));
+                        toast.success("You're successfully login !");
+                    } catch (error) {
+                        toast.error("Invalid email or password !");
+                    }
                 } else {
-                    dispatch(register(email, password));
-                    toast.success("You're successfully register !");
+                    try {
+                        dispatch(register(email, password));
+                        toast.success("You're successfully register !");
+                    } catch (error) {
+                        toast.error("Something went wrong !");
+                    }
                 }
             } catch (error) {
                 toast.error("Something went wrong !");
