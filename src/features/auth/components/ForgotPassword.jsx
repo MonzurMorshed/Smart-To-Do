@@ -1,6 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { resetPassword } from "../features/auth/authSlice";
+import { resetPassword } from "../authSlice";
 import { FaPlane } from "react-icons/fa";
 
 export default function ForgotPassword({forgotPassword,setForgotPassword}) {
@@ -33,7 +33,7 @@ export default function ForgotPassword({forgotPassword,setForgotPassword}) {
       />
       <button
         onClick={handleReset}
-        className="text-[15px] flex items-center justify-center gap-3  px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg w-full font-medium shadow hover:from-blue-600 hover:to-indigo-600 transition"
+        className="saveBtn text-[15px] flex items-center justify-center gap-3  px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg w-full font-medium shadow hover:from-blue-600 hover:to-indigo-600 transition"
       >
         <FaPlane  className="mr-2 size-5" />Send Reset Link
       </button>

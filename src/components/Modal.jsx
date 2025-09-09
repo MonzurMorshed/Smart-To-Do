@@ -7,7 +7,7 @@ export default function Modal({ children, onClose }) {
       onClick={onClose}
     >
       <div
-        className="modal p-6 rounded-md w-full max-w-md"
+        className="glossy modal p-6 rounded-md w-full max-w-md bg-light dark:bg-white"
         onClick={e => e.stopPropagation()}
       >
         {children}

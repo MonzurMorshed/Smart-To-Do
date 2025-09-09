@@ -1,11 +1,18 @@
 import React, { useRef } from "react";
 import { useTranslation } from 'react-i18next';
 import * as XLSX from "xlsx";
+import Select from "react-select";
 
 export default function ImportExport({ tasks, setTasks }) {
 
   const {t} = useTranslation();
   const fileInputRef = useRef();
+
+  const options = [
+    { value: "xlsx", label: "Excel (.xlsx)" },
+    { value: "csv", label: "CSV (.csv)" },
+    { value: "json", label: "JSON (.json)" }
+  ];
 
   const exportFile = (type) => {
     if (type === "xlsx") {
@@ -79,24 +86,53 @@ export default function ImportExport({ tasks, setTasks }) {
 
   return (
     <div className="flex items-center gap-2">
-      
-      <select
-        onChange={(e) => {
-          if (e.target.value) {
-            exportFile(e.target.value);
-            e.target.value = ""; 
-          }
-        }}
-        className="border rounded p-1 text-sm bg-white dark:bg-gray-800 dark:text-white"
-      >
-        <option value="">{t('export_as')}...</option>
-        <option value="xlsx">Excel (.xlsx)</option>
-        <option value="csv">CSV (.csv)</option>
-        <option value="json">JSON (.json)</option>
-      </select>
+
+      <Select
+      options={options}
+      placeholder={t("export_as") + "..."}
+      isSearchable={false} // you can set true if you want search box
+      onChange={(option) => {
+        if (option?.value) {
+          exportFile(option.value);
+        }
+      }}
+      className="w-48 text-sm"
+      classNamePrefix="select2"
+      styles={{
+        control: (base) => ({
+          ...base,
+          borderRadius: "0.5rem",
+          borderColor: "var(--border)",
+          backgroundColor: "var(--card)",
+          color: "var(--text)",
+          minHeight: "36px",
+        }),
+        menu: (base) => ({
+          ...base,
+          backgroundColor: "var(--card)",
+          borderRadius: "0.5rem",
+          overflow: "hidden",
+          zIndex: 9999, // prevents "going behind" issue
+        }),
+        option: (base, { isFocused }) => ({
+          ...base,
+          backgroundColor: isFocused ? "var(--primary)" : "var(--card)",
+          color: isFocused ? "white" : "var(--text)",
+          cursor: "pointer",
+          padding: "8px 12px",
+        }),
+        singleValue: (base) => ({
+          ...base,
+          color: "var(--text)",
+        }),
+        placeholder: (base) => ({
+          ...base,
+          color: "var(--muted)",
+        }),
+      }} />
 
       <button
-        className="border rounded px-3 py-1 text-sm bg-blue-500 text-white hover:bg-blue-600"
+        className="border"
         onClick={() => fileInputRef.current.click()}
       >
         {t('import')}

@@ -38,7 +38,10 @@ const resources = {
       "sort_by_priority": "Sort By priority",
       "thinking_of_a_task": "Thinking of a task",
       "uses_as_notes": "Uses as notes",
-      "dismiss": "Dismiss"
+      "dismiss": "Dismiss",
+      "select_order": "Select Order",
+      "complete": "Complete",
+      "incomplete": "Incomplete"
     }
   },
   es: {
@@ -76,7 +79,10 @@ const resources = {
       "sort_by_priority": "Ordenar por fecha de vencimiento",
       "thinking_of_a_task": "Pensando en una tarea",
       "uses_as_notes": "Usos como notas",
-      "dismiss": "Despedir"
+      "dismiss": "Despedir",
+      "select_order": "Seleccionar pedido",
+      "complete": "Completo",
+      "incomplete": "Incompleto"
     }
   },
   fr: {
@@ -114,7 +120,10 @@ const resources = {
       "sort_by_priority": "Trier par priorité",
       "thinking_of_a_task": "Penser à une tâche",
       "uses_as_notes": "Utilisations comme notes",
-      "dismiss": "Rejeter"
+      "dismiss": "Rejeter",
+      "select_order": "Sélectionnez la commande",
+      "complete": "Complet",
+      "incomplete": "Incomplet"
     }
   }
 };

@@ -6,6 +6,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ImCross } from "react-icons/im";
 import { AiFillLike } from "react-icons/ai";
 import { FaBrain } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { addTask } from "../tasksSlice";
+import SelectInput from "../../../components/SelectInput";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_OPENAI_API_KEY);
 
@@ -14,15 +17,15 @@ async function suggestTaskTitle(task) {
 
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    const prompt = `Based on the task "${task}", suggest 3 related sub-tasks or next steps. Provide the suggestions as a comma-separated list, and do not include any introductory phrases or explanations. For example: "Buy milk, eggs, bread"`;
+    const prompt = `Based on the task "${task}", suggest 5 related sub-tasks or next steps. Provide the suggestions as ordered list, and do not include any introductory phrases or explanations. For example: "Buy milk, eggs, bread"`;
 
     try {
       const { response } = await model.generateContent(prompt);
-      
+
       const rawText = response.candidates[0].content.parts[0].text;
 
       const tasksArray = rawText
-        .split(',')
+        .split(', ')
         .map(task => task.trim())
         .filter(task => task.length > 0);
 
@@ -30,34 +33,56 @@ async function suggestTaskTitle(task) {
 
     } catch (error) {
       console.error("Error parsing response:", error);
-      return []; 
+      return [];
     }
   } catch (error) {
     console.error("AI Error:", error);
-    return []; 
+    return [];
   }
 }
 
-export default function TaskForm({ categories, onAdd }) {
+export default function TaskForm({ categories, user }) {
 
+  const dispatch = useDispatch();
   const [title, setTitle] = useState('')
   const [notes, setNotes] = useState('')
-  const [category, setCategory] = useState(categories[0]?.name || '')
-  const [priority, setPriority] = useState('Medium')
+  const [category, setCategory] = useState('')
+  const [priority, setPriority] = useState('')
   const [due, setDue] = useState('')
   const [aiSuggestion, setAiSuggestion] = useState();
   const [loadingAI, setLoadingAI] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const { t } = useTranslation();
 
+  const categoryOptions = [
+    { value: "", label: t("select_category") },
+    ...(categories || []).map((c) => ({
+      value: c.id,
+      label: c.name
+    }))
+  ];
+
+  const selectedCategoryOption = categoryOptions.find(opt => opt.label === category || opt.value === category);
+
+  const priorityOptions = [
+    { value: "", label: t('select_priority') },
+    { value: "High", label: "High" },
+    { value: "Medium", label: "Medium" },
+    { value: "Low", label: "Low" },
+  ];
+
+  const selectedPriorityOption = priorityOptions.find(opt => opt.label === priority || opt.value === priority);
+
   const submit = (e) => {
     e.preventDefault()
     if (!title.trim()) {
-      toast.error("Title required !");
+      toast.error("Please enter title of the task.");
       return false;
     }
-    onAdd({ title: title.trim(), notes: notes.trim(), category, priority, due: due ? new Date(due).getTime() : null })
-    setTitle(''); setNotes(''); setDue(''); setPriority('Medium'); setCategory(categories[0]?.name)
+
+    const task = { title: title.trim(), notes: notes.trim(), category, priority, due: due ? new Date(due).getTime() : null };
+    dispatch(addTask(user.uid, task))
+    setTitle(''); setNotes(''); setDue(''); setPriority(''); setCategory('')
     toast.success('Task successfully added your list.');
   }
 
@@ -73,7 +98,7 @@ export default function TaskForm({ categories, onAdd }) {
       if (err.status === 429) {
         toast.error("You’ve hit your  quota. Please check your billing.");
       } else {
-        console.error("AI Suggest error:", err);
+        toast.error("Something went wrong.");
       }
     } finally {
       setLoadingAI(false);
@@ -86,12 +111,11 @@ export default function TaskForm({ categories, onAdd }) {
       <label className="block font-medium mb-2">{t('add_task')}</label>
 
       <div className="block gap-2 mb-3">
-        <input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('task_title')} className={`my-4 flex-1 input px-3 py-2 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition bg-white/70 dark:bg-gray-800/50 input`} />
+        <input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('task_title')} className={`input`} />
         <button
           type="button"
           onClick={handleAISuggest}
           disabled={loadingAI}
-          className="w-full px-4 py-2 flex items-center justify-center rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow hover:opacity-90 transition"
         >
           <FaBrain className="mr-2" /> {loadingAI ? t('thinking') : t('ai_suggest')}
         </button>
@@ -116,17 +140,17 @@ export default function TaskForm({ categories, onAdd }) {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => {setNotes(prev => prev + "\n" + aiSuggestion);setShowPreview(false)}}
+                  onClick={() => { setNotes(prev => prev + "\n" + aiSuggestion); setShowPreview(false) }}
                   className="px-3 py-1 rounded-md bg-purple-500 text-white text-xs flex items-center space-x-4"
                 >
-                  <AiFillLike className="mr-2"/>Use as Notes
+                  <AiFillLike className="mr-2" />Use as Notes
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowPreview(false)}
                   className="flex items-center space-x-4 px-3 py-1 rounded-md bg-gray-300 text-gray-700 text-xs"
                 >
-                  <ImCross className="mr-2"/> Dismiss
+                  <ImCross className="mr-2" /> Dismiss
                 </button>
               </div>
             </>
@@ -134,19 +158,15 @@ export default function TaskForm({ categories, onAdd }) {
         </div>
       )}
 
-      <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('notes')} className={`w-full mt-2 input resize-none h-20`} />
+      <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('notes')} className={`w-full mt-2 input border-[20px] resize-none h-30`} />
+
 
       <div className="grid grid-cols-2 gap-2 mt-2">
-        <select value={category} onChange={e => setCategory(e.target.value)} className={`input`}>
-          <option>{t('select_category')}</option>
-          {categories && categories.map(c => <option key={c.id}>{c.name}</option>)}
-        </select>
-        <select value={priority} onChange={e => setPriority(e.target.value)} className={`input`}>
-          <option>{t('select_priority')}</option>
-          <option>High</option>
-          <option>Medium</option>
-          <option>Low</option>
-        </select>
+
+        <SelectInput setFilter={setCategory} options={categoryOptions} selectedOptions={selectedCategoryOption} t={t} />
+
+        <SelectInput setFilter={setPriority} options={priorityOptions} selectedOptions={selectedPriorityOption} t={t} />
+
       </div>
 
       <div className="mt-2">
@@ -154,7 +174,7 @@ export default function TaskForm({ categories, onAdd }) {
       </div>
 
       <div className="mt-3 flex justify-end">
-        <button type="submit" className="saveBtn flex items-center justify-between">
+        <button type="submit">
           <IoIosSave className='mr-2' />{t('save')}</button>
       </div>
     </form>

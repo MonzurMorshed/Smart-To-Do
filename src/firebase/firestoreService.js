@@ -51,7 +51,7 @@ export const subscribeCategories = (uid, callback) => {
         return {
             id: doc.id,
             name: data.name,
-            createdAt: data.createdAt?.toDate()
+            createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : data.createdAt || null
         };
     });
     callback(categories);

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Modal from './Modal';
+import Modal from '../../../components/Modal';
 import { GiCancel } from "react-icons/gi";
 import { FaRegEdit } from "react-icons/fa";
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import SelectInput from '../../../components/SelectInput';
 
 export default function EditTaskModal({ task, categories, onClose, onSave }) {
   const [title, setTitle] = useState('');
@@ -10,6 +12,26 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
   const [category, setCategory] = useState(categories[0]);
   const [priority, setPriority] = useState('Medium');
   const [due, setDue] = useState('');
+  const { t } = useTranslation();
+
+  const categoryOptions = [
+    { value: "All", label: t("all") },
+    ...(categories || []).map((c) => ({
+      value: c.id,
+      label: c.name
+    }))
+  ];
+
+  const selectedCategoryOption = categoryOptions.find(opt => opt.label === category || opt.value === category);
+
+  const priorityOptions = [
+    { value: "", label: t('select_priority') },
+    { value: "High", label: "High" },
+    { value: "Medium", label: "Medium" },
+    { value: "Low", label: "Low" },
+  ];
+
+  const selectedPriorityOption = priorityOptions.find(opt => opt.label === priority || opt.value === priority);
 
   useEffect(() => {
     if (!task) return;
@@ -23,7 +45,7 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
   const handleSubmit = e => {
     e.preventDefault();
     if (!title.trim()) {
-      toast.error('Please enter title');
+      toast.error('Please enter title of the task');
       return false;
     }
     onSave({
@@ -35,14 +57,14 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
       due: due ? new Date(due).getTime() : null,
     });
     onClose();
-    toast.success('Task edited successfully.');
+    toast.success('Task updated successfully.');
   };
 
   if (!task) return null;
 
   return (
     <Modal onClose={onClose}>
-      <h2 className="text-xl font-semibold mb-4 dark:text-dark">Update Task</h2>
+      <h2 className="text-xl font-semibold mb-4 dark:text-dark text-center">Update Task</h2>
       <form onSubmit={handleSubmit}>
         <input
           className="input mb-3"
@@ -58,24 +80,11 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
           placeholder="Notes (optional)"
         />
         <div className="grid grid-cols-2 gap-2 mb-3">
-          <select
-            className="input"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-          >
-            {categories.map(c => (
-              <option key={c.id}>{c.name}</option>
-            ))}
-          </select>
-          <select
-            className="input"
-            value={priority}
-            onChange={e => setPriority(e.target.value)}
-          >
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
-          </select>
+
+          <SelectInput setFilter={setCategory} options={categoryOptions} selectedOptions={selectedCategoryOption} t={t} />
+
+          <SelectInput setFilter={setPriority} options={priorityOptions} selectedOptions={selectedPriorityOption} t={t} />
+
         </div>
         <input
           className="input mb-3"
@@ -87,13 +96,13 @@ export default function EditTaskModal({ task, categories, onClose, onSave }) {
           <button
             type="button"
             onClick={onClose}
-            className="deleteBtn flex items-center justify-between"
+            className="bg-red-700 hover:bg-red-800 flex items-center justify-between"
           >
-            <GiCancel className='mr-2'/>
+            <GiCancel className='mr-2' />
             Cancel
           </button>
-          <button type="submit" className="saveBtn flex items-center justify-between">
-            <FaRegEdit className='mr-2'/>
+          <button type="submit" className="flex items-center justify-between">
+            <FaRegEdit className='mr-2' />
             Save Changes
           </button>
         </div>

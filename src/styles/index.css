@@ -2,51 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light mode (default) */
 :root {
-  --gradient-bg: linear-gradient(to bottom right, #6366f1, #a855f7, #ec4899);
-  --bg: var(--gradient-bg);
-  --card: #ffffff;
-  --text: #0f172a;
-  --modal-bg: #fff;
+  --bg: #F3F4F6;
+  /* page background */
+  --card: #FFFFFF;
+  /* cards */
+  --text: #1F2937;
+  /* main text */
+  --muted: #6B7280;
+  /* muted text */
+  --border: #E5E7EB;
+  /* borders */
+  --modal-bg: #FFFFFF;
+  --primary: #4F46E5;
+  /* buttons, highlights */
+  --primary-hover: #4338CA;
+  --padding: 14px 30px;
+  --radius: 30px;
 }
 
+/* Dark mode */
 [data-theme='dark'] {
-  --gradient-bg: linear-gradient(to bottom right, #100d30, #6b21a8, #460a23);
-  --bg: var(--gradient-bg);
-  --card: #5c5d62;
-  --text: #f2f7f9;
-  --modal-bg: #5a5858;
+  --bg: #111827;
+  /* deep gray */
+  --card: #1F2937;
+  /* card gray-800 */
+  --text: #F9FAFB;
+  /* white text */
+  --muted: #b9bdc4;
+  /* muted gray-400 */
+  --border: #374151;
+  /* border gray-700 */
+  --modal-bg: #1F2937;
+  --primary: #6366F1;
+  /* indigo-500 */
+  --primary-hover: #4F46E5;
 }
 
-[data-theme='dark'] select {
-  background: #525356;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text);
-}
-
-.modal {
-  background: var(--modal-bg);
-}
-
-.input {
-  @apply border px-3 py-2 rounded-md bg-transparent w-full placeholder-black ;
-}
-
-.saveBtn {
-  @apply text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
-}
-
-.editBtn {
-  @apply text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
-}
-
-.deleteBtn {
-  @apply text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
-}
-
+/* Glossy Card Style */
 .glossy {
-  @apply bg-white/30 dark:bg-black/30 backdrop-blur-lg border border-white/30 dark:border-gray-700 p-4 rounded-xl
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Input Styling */
+.input {
+  @apply w-full px-3 py-2 my-4 flex-1 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition bg-white/70 dark:bg-gray-800/50;
+  color: var(--text);
+  background: var(--card);
+  border-color: var(--border);
+  border-radius: var(--radius);
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+/* Buttons */
+button {
+  @apply flex items-center justify-center space-x-2 space-y-2 gap-3 px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg w-full font-medium shadow transition text-[15px];
+  border-radius: var(--radius);
+}
+
+button:hover {
+  @apply bg-gradient-to-l from-blue-500 to-indigo-600;
+}
+
+/* Header Text Contrast */
+header h2,
+header p {
+  color: #FFFFFF;
 }

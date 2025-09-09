@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { googleLogin, login, register } from "../features/auth/authSlice";
+import { googleLogin, login, register } from "../authSlice";
 import toast from "react-hot-toast";
 import { LiaSignInAltSolid } from "react-icons/lia";
 import { FaLock } from "react-icons/fa";
@@ -60,7 +60,7 @@ export default function AuthForm() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="p-8 bg-white rounded-2xl shadow-lg w-full max-w-md mx-auto mt-20 border border-gray-100"
+            className="glossy p-8 bg-white rounded-2xl shadow-lg w-full max-w-md mx-auto mt-20 border border-gray-100"
         >
             <div className="w-full text-center mb-6">
                 <h2 className="text-2xl font-semibold mb-2 text-center text-gray-800 m-0 m-auto w-full">TodoAI</h2>
@@ -88,10 +88,10 @@ export default function AuthForm() {
                         {
                             mode == "login" ?
                                 <>
-                                    <button type="submit" className="flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg w-full font-medium shadow hover:from-blue-600 hover:to-indigo-600 transition text-[15px]"><LiaSignInAltSolid  className="mr-2 size-5" /> Login</button>
+                                    <button type="submit" className="saveBtn flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r hover:bg-gradient-to-l from-blue-500 to-indigo-500 text-white rounded-lg w-full font-medium shadow hover:from-blue-500 hover:to-indigo-600 transition text-[15px]"><LiaSignInAltSolid  className="mr-2 size-5" /> Login</button>
                                     <span className="font-semibold text-center p-2 table w-full">OR</span>
-                                    <span onClick={handleGoogleSignin} className=" text-[15px] flex items-center justify-center gap-3  w-full py-3 px-5  border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 ease-in-out cursor-pointer font-semibold"> <FcGoogle  className="mr-2 size-5" /> Continue with Google</span>
-                                </> : <button type="submit" className=" text-[15px] flex items-center justify-center gap-3  px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg w-full font-medium shadow hover:from-blue-600 hover:to-indigo-600 transition"><FaLock  className="mr-2 size-5" />Register</button>
+                                    <span onClick={handleGoogleSignin} className="saveBtn text-[15px] flex items-center justify-center gap-3  w-full py-3 px-5  border border-gray-300 dark:border-gray-600 hover:bg-gradient-to-l rounded-xl shadow-sm bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:from-blue-500 hover:to-indigo-600 transition-all duration-200 ease-in-out cursor-pointer font-semibold"> <FcGoogle  className="mr-2 size-5" /> Continue with Google</span>
+                                </> : <button type="submit" className="saveBtn text-[15px] flex items-center justify-center gap-3  px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:bg-gradient-to-l rounded-lg w-full font-medium shadow hover:from-blue-500 hover:to-indigo-600 transition"><FaLock  className="mr-2 size-5" />Register</button>
                                     
                         }
 
@@ -103,14 +103,14 @@ export default function AuthForm() {
 
             <p
                 onClick={changeMode}
-                className="mt-4 text-sm text-center text-blue-600 cursor-pointer"
+                className="mt-4 text-md text-center text-gray cursor-pointer"
             >
                 {mode === "login"
                     ? "Don't have an account? Register"
                     : "Already have an account? Login"}
             </p>
 
-            <p onClick={() => setForgotPassword(1)} className="mt-4 text-sm text-center text-blue-600 cursor-pointer">
+            <p onClick={() => setForgotPassword(1)} className="mt-4 text-md text-center text-gray cursor-pointer">
                 Forget Password ? Click Here
             </p>
             
